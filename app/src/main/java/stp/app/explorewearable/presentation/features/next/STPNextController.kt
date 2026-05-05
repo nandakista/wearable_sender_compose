@@ -20,19 +20,18 @@ class STPNextController {
         }
     }
 
-    fun getConnectedDeviceName(context: Context): String? {
+    fun getConnectedDeviceNames(context: Context): List<String> {
         return try {
             val nodes = Tasks.await(
                 Wearable.getNodeClient(context).connectedNodes
             )
 
-            if (nodes.isNotEmpty()) {
-                nodes.first().displayName
-            } else null
+            Log.d("WATCH_APP", "Paired to devices: $nodes")
 
+            nodes.map { it.displayName }
         } catch (e: Exception) {
             Log.e("WATCH_APP", "Failed get paired device name: $e")
-            null
+            emptyList()
         }
     }
     fun sendNext(

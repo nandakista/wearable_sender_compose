@@ -35,16 +35,16 @@ import kotlinx.coroutines.withContext
 fun MainScreen() {
     val context = LocalContext.current
 
-    var receiverDeviceName by remember { mutableStateOf<String?>(null) }
+    var receiverDeviceNames by remember { mutableStateOf<List<String>>(emptyList()) }
     var isConnected by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         while (true) {
-            val deviceName = withContext(Dispatchers.IO) {
-                STPNextController().getConnectedDeviceName(context)
+            val deviceNames = withContext(Dispatchers.IO) {
+                STPNextController().getConnectedDeviceNames(context)
             }
 
-            receiverDeviceName = deviceName
+            receiverDeviceNames = deviceNames
             delay(2000)
         }
     }
@@ -74,7 +74,7 @@ fun MainScreen() {
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = if (isConnected) "🟢 Paired ($receiverDeviceName)" else "🔴 Not Paired"
+                    text = if (isConnected) "🟢 Paired (${receiverDeviceNames.joinToString(", ")})" else "🔴 Not Paired"
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
