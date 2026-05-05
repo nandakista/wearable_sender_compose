@@ -6,9 +6,19 @@ import androidx.compose.material3.SnackbarHostState
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.Wearable
 import kotlinx.coroutines.CoroutineScope
-import stp.app.explorewearable.presentation.helpers.ToastHelper
 
 class STPNextController {
+    fun checkConnection(context: Context): Boolean {
+        return try {
+            val nodes = Tasks.await(
+                Wearable.getNodeClient(context).connectedNodes
+            )
+            nodes.isNotEmpty()
+        } catch (e: Exception) {
+            Log.e("WATCH_APP", "Failed pair to device $e")
+            false
+        }
+    }
     fun sendNext(
         context: Context,
         scope: CoroutineScope,
